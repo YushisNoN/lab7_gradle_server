@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version "1.1.4"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.0'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+    implementation 'org.glassfish:jakarta.el:4.0.2'
+    implementation 'org.postgresql:postgresql:42.7.5'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // Spring Data JPA
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+shadowJar {
+    archiveClassifier.set('all') // Добавляет суффикс "-all" к имени JAR-файла
+    mergeServiceFiles()
+    manifest {
+        attributes(
+                'Main-Class': 'org.example.Main',
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+        )
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
