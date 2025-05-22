@@ -1,0 +1,83 @@
+create table coordinates
+(
+  id serial not null primary key,
+  x bigint not null check ( x > -852 ),
+  y int not null
+);
+
+create table measures
+(
+  id serial not null primary key ,
+  value varchar(100) unique
+);
+
+create table EyecolorTable
+(
+    id serial not null primary key ,
+    value varchar(100) unique not null check ( value <> '' )
+);
+
+create table HaircolorTable
+(
+    id serial not null primary key ,
+    value varchar(100) unique not null check ( value <> '' )
+);
+
+
+create table country
+(
+  id serial not null primary key,
+  value varchar(100) unique not null check ( value <> '' )
+);
+
+create table loc
+(
+  id serial not null primary key ,
+  x bigint,
+  y double precision not null,
+  z double precision
+);
+
+create table person
+(
+    id serial not null primary key,
+    name varchar(255) not null  check ( name <> ''),
+    height float check ( height > 0 ),
+    eyeColor varchar(100) check ( eyeColor  <> ''),
+    hairColor varchar(100) not null check ( hairColor <> '' ),
+    nationality varchar(100) not null check ( nationality <> '' ),
+    location int not null,
+    foreign key (eyeColor) references  EyecolorTable (value),
+    foreign key (hairColor) references HaircolorTable (value),
+    foreign key (nationality) references country (value),
+    foreign key (location) references loc (id)
+);
+
+
+create table product
+(
+    id serial not null primary key,
+    name varchar(255) not null check ( name <> '' ),
+    coordinates int not null,
+    foreign key (coordinates) references coordinates (id),
+    creationDate date not null,
+    price int check ( price > 0 ),
+    unitOfMeasure varchar(100) check ( unitOfMeasure <> '' ),
+    foreign key (unitOfMeasure) references measures (value)
+);
+
+create table users
+(
+    id serial not null primary key,
+    username varchar(255) not null check (username <> ''),
+    password varchar(255) not null check (password <> '')
+);
+
+create table user_product
+(
+    id serial not null primary key,
+    user_id int not null,
+    product_id int not null,
+    foreign key(user_id) references users(id),
+    foreign key(product_id) references product(id)
+);
